@@ -1,6 +1,7 @@
 package com.huallpa.rest.webservices.restfulwebservices.user;
 
 import com.huallpa.rest.webservices.restfulwebservices.user.exception.UserNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +37,8 @@ public class UserResource {
         if (user == null) {
             throw new UserNotFoundException("Id-" + id);
         }
+
+
         return user;
     }
 
