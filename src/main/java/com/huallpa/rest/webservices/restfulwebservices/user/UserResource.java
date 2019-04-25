@@ -2,7 +2,11 @@ package com.huallpa.rest.webservices.restfulwebservices.user;
 
 import com.huallpa.rest.webservices.restfulwebservices.user.exception.UserNotFoundException;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +27,22 @@ public class UserResource {
     }
 
     @GetMapping(path = "/users/{id}")
-    public User retrieveUser(@PathVariable Integer id) {
+    public Resource<User> retrieveUser(@PathVariable Integer id) {
         User user = userService.findOne(id);
         if (user == null) {
             throw new UserNotFoundException("Id-" + id);
         }
-        return user;
+        
+
+        Resource<User> resource = new Resource<User>(user);
+        
+        ControllerLinkBuilder linkTo = 
+        		linkTo(methodOn(this.getClass()).retrieveAllUsers());
+        
+        resource.add(linkTo.withRel("all-users"));
+        
+        
+        return resource;
     }
 
     @DeleteMapping(path = "/users/{id}")
@@ -37,8 +51,6 @@ public class UserResource {
         if (user == null) {
             throw new UserNotFoundException("Id-" + id);
         }
-
-
         return user;
     }
 
